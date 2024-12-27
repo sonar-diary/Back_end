@@ -2,7 +2,6 @@ package sonar.back_end.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.userdetails.User;
 
 import java.time.LocalDate;
 
@@ -18,22 +17,27 @@ public class DiaryEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private UserEntity user;
 
     @Column(nullable = false, columnDefinition = "Text")
-    private String content;
-
+    private String diaryContent;
 
     private String imageUrl;
+
+    private String color;
+
+    private String hashtag;
 
     @Column(nullable = false)
     private LocalDate diaryDate;
 
     @Builder
-    public DiaryEntity(User user, String content, String imageUrl, LocalDate diaryDate) {
+    public DiaryEntity(UserEntity user, String diaryContent, String imageUrl, LocalDate diaryDate, String color, String hashtag) {
         this.user = user;
-        this.content = content;
+        this.diaryContent = diaryContent;
         this.imageUrl = imageUrl;
         this.diaryDate = diaryDate;
+        this.color = color;
+        this.hashtag = hashtag;
     }
 }

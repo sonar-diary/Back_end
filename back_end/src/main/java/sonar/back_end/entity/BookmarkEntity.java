@@ -18,7 +18,7 @@ public class BookmarkEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private UserEntity user;
 
     @Column(nullable = false)
     private String title;
@@ -27,7 +27,7 @@ public class BookmarkEntity {
     private LocalDate bookmarkDate;
 
     @Builder
-    public BookmarkEntity(User user, String title, LocalDate bookmarkDate) {
+    public BookmarkEntity(UserEntity user, String title, LocalDate bookmarkDate) {
         this.user = user;
         this.title = title;
         this.bookmarkDate = bookmarkDate;
