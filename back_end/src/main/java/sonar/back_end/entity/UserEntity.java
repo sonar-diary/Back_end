@@ -28,15 +28,13 @@ public class UserEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    private String profileImage;
 
     @Builder
-    public UserEntity(String socialId, SocialType socialType, String name, String email, String profileImage) {
+    public UserEntity(String socialId, SocialType socialType, String name, String email) {
         this.socialId = socialId;
         this.socialType = socialType;
         this.name = name;
         this.email = email;
-        this.profileImage = profileImage;
     }
 }
 
