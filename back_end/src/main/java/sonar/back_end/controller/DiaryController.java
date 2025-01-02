@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import sonar.back_end.dto.DiaryDTO;
 import sonar.back_end.entity.DiaryEntity;
+import sonar.back_end.entity.UserEntity;
 import sonar.back_end.repository.DiaryRepository;
+import sonar.back_end.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -17,24 +20,23 @@ import java.util.Optional;
 public class DiaryController {
 
     private final DiaryRepository diaryRepository;
+    private final UserRepository userRepository;
 
     @PostMapping("/write")
-    public ResponseEntity<DiaryEntity> wirteDiary(@RequestParam String diaryContent,
-                                                  @RequestParam String imageUrl,
-                                                  @RequestParam String color,
-                                                  @RequestParam String hashtag,
-                                                  @RequestParam LocalDate diaryDate
-    ) {
+    public ResponseEntity<DiaryEntity> wirteDiary(@RequestBody DiaryDTO request) {
+        UserEntity user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         DiaryEntity diary = DiaryEntity.builder()
-                .diaryContent(diaryContent)
-                .imageUrl(imageUrl)
-                .color(color)
-                .hashtag(hashtag)
-                .diaryDate(diaryDate)  // 직접 LocalDate 사용
+                .user(user)
+                .diaryContent(request.getDiaryContent())
+                .imageUrl(request.getImageUrl())
+                .color(request.getColor())
+                .hashtag(request.getHashtag())
+                .diaryDate(request.getDiaryDate())
                 .build();
-        DiaryEntity savedDiary = diaryRepository.save(diary);
-        return ResponseEntity.ok(savedDiary);
+
+        return ResponseEntity.ok(diaryRepository.save(diary));
     }
 
     @DeleteMapping("/{diaryId}")

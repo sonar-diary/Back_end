@@ -35,3 +35,10 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# 프로퍼티 파일 제외
+application.properties
+application-prod.properties
+
+# 예시 파일은 포함
+!application.properties.example

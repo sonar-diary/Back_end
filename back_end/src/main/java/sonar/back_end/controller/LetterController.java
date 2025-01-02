@@ -4,9 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import sonar.back_end.dto.LetterDTO;
 import sonar.back_end.entity.DiaryEntity;
 import sonar.back_end.entity.LetterEntity;
+import sonar.back_end.entity.UserEntity;
 import sonar.back_end.repository.LetterRepository;
+import sonar.back_end.repository.UserRepository;
 
 import java.time.LocalDate;
 
@@ -16,16 +19,20 @@ import java.time.LocalDate;
 public class LetterController {
 
     private final LetterRepository letterRepository;
+    private final UserRepository userRepository;
 
-    @PostMapping("/wirte")
-    public ResponseEntity<LetterEntity> wirteLetter(@RequestParam String letterContent,
-                                                    @RequestParam LocalDate letterDate) {
+    @PostMapping("/write")
+    public ResponseEntity<LetterEntity> wirteLetter(@RequestBody LetterDTO request) {
+        UserEntity user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         LetterEntity letter = LetterEntity.builder()
-                .letterContent(letterContent)
-                .letterDate(letterDate)  // 직접 LocalDate 사용
+                .user(user)
+                .letterContent(request.getLetterContent())
+                .letterDate(request.getLetterDate())  // 직접 LocalDate 사용
                 .build();
-        LetterEntity savedLetter = letterRepository.save(letter);
-        return ResponseEntity.ok(savedLetter);
+
+        return ResponseEntity.ok(letterRepository.save(letter));
     }
 
     @DeleteMapping("/{letterId}")
